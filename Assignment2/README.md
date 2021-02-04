@@ -10,7 +10,6 @@ Code
 Part 1
 ----------
 Unit test screenshot
-![]
-(picture/timerTest.png)
+![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/timerTest.png)
 
  
