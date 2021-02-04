@@ -4,11 +4,13 @@ Assignment 2
 Code
 ----------
 1.[Timer.java](src/main/java/edu/neu/coe/info6205/util/Timer.java)<br>
-2.[InsertionSort.java](src/main/java/edu/neu/coe/info6205/sort/simple/InsertionSort.java)
+2.[InsertionSort.java](src/main/java/edu/neu/coe/info6205/sort/simple/InsertionSort.java)<br>
 3.[Assignment2_part3.java](src/main/java/edu/neu/coe/info6205/sort/simple/Assignment2_part3.java)
 
 Part 1
 ----------
 Unit test screenshot
+![]
+(picture/timerTest.png)
 
  
