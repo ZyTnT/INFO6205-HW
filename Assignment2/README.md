@@ -22,7 +22,14 @@ Part 3
 --------------
 The time of system spend on each kind of orderlist:
 ![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/Assignment2_part3.png)
-Here we can see that the reverse order list spend the most time, almost apporch to O(N^2)<br>
+![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/Assignment2_part3_2.png)
+![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/Assignment2_part3_3.png)
+![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/Assignment2_part3_4.png)
+![Image text](https://github.com/ZyTnT/INFO6205-HW/blob/main/Assignment2/picture/Assignment2_part3_5.png)
+
+Here we can see that the result was stable in 5 experiments with different n.<br>
+The reverse order list spend the most time, almost apporch to O(N^2)<br>
 Random list has normal performance.<br>
-Partially Random list spend less time than random.
+Partially Random list spend less time than random.<br>
+The ordered list is spend least time, always zero.
  
