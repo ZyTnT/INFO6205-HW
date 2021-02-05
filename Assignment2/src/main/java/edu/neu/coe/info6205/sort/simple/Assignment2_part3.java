@@ -9,7 +9,6 @@ import java.util.*;
 public class Assignment2_part3 {
     @Test
     public void part3() {
-        final int N = 100;
 
         //Four array order situations:random, ordered, partially-ordered and reverse-ordered.
         List<Double> randomSortedList = new ArrayList<>();
