@@ -42,13 +42,13 @@ public class Question1_Benchmark {
             WQU_Benchmark(10000);
         });
 
-        System.out.printf("Weigthed UnionFind(Size) to union 10000 sites takes %.2f milliseconds\n",benchmark_WQU_RUN.run(0,1000));
+        System.out.printf("N = 10000， weighted quick union size takes %.2f milliseconds\n",benchmark_WQU_RUN.run(0,1000));
 
         Benchmark<Integer> benchmark_WQU_ALTER_RUN = new Benchmark_Timer<>("WeightedUnionFindAlterRun 10000", black -> {
             WQU_Alternative_Benchmark(10000);
         });
 
-        System.out.printf("Weigthed UnionFind(Depth) to union 10000 sites takes %.2f milliseconds\n",benchmark_WQU_ALTER_RUN.run(0,1000));
+        System.out.printf("N = 10000， weighted quick union depth takes %.2f milliseconds\n",benchmark_WQU_ALTER_RUN.run(0,1000));
 
     }
 }

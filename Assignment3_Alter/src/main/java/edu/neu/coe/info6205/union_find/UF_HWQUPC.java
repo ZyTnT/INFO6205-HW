@@ -7,7 +7,10 @@
  */
 package edu.neu.coe.info6205.union_find;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Height-weighted Quick Union with Path Compression
@@ -198,5 +201,29 @@ public class UF_HWQUPC implements UF {
         // TO BE IMPLEMENTED update parent to value of
         this.parent[i] = this.parent[this.parent[i]];
 
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(4);
+        list.add(3);
+        list.add(9);
+        list.add(6);
+        list.remove(2);
+        list.remove(6);
+        list.remove(50/3);
+        list.add(3,15);
+        System.out.print("[" + list.get(0));
+
+        for(int i=1; i<list.size();i++){
+            if(Judge(list.get(i))){
+                System.out.print("," + list.get(i));
+            }
+        }
+        System.out.print("]");
+    }
+    private  static boolean Judge(int n){
+        return n%2==0||n%3==0;
     }
 }
