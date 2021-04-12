@@ -1,7 +1,7 @@
 import math
 
 
-def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_hospital_lag, D_recovery_severe, D_death, P_SEVERE, CFR, InterventionTime, InterventionAmt, duration):
+def get_solution(dt, N, R0, D_incbation, D_infectious, D_to_hospital, D_recovery, P_SEVERE, CFR, InterventionTime, InterventionAmt):
     Integrators = {"Euler": [[1]],
                    "MidPoint": [[0.5, 0.5], [0, 1]],
                    "Heun": [[1, 1], [0.5, 0.5]],
@@ -11,8 +11,8 @@ def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_ho
                    "RK4": [[.5, .5], [.5, 0, .5], [1, 0, 0, 1], [1 / 6, 1 / 3, 1 / 3, 1 / 6]],
                    "RK38": [[1 / 3, 1 / 3], [2 / 3, -1 / 3, 1], [1, 1, -1, 1], [1 / 8, 3 / 8, 3 / 8, 1 / 8]]}
 
-    interpolation_steps = 40
-    steps = 110 * interpolation_steps
+    interpolation_steps = 10
+    steps = 420 * interpolation_steps
     dt = dt/interpolation_steps
     sample_step = interpolation_steps
 
@@ -33,32 +33,22 @@ def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_ho
         S = x[0]          #Susectable
         E = x[1]          #Exposed
         I = x[2]          #Infectious
-        Mild = x[3]       #Recovering(Mild)
-        Severe = x[4]     #Recovering(Severe at home)
-        Severe_H = x[5]   #Recovering(Severe at hospital)
-        Fatal = x[6]      #Recovering(Fatal)
-        R_Mild = x[7]     #Recovered
-        R_Severe = x[8]   #Recovered
-        R_Fatal = x[9]    #Dead
-
-        p_severe = P_SEVERE
-        p_fatal = CFR
-        p_mild = 1 - P_SEVERE - CFR
+        RM = x[3]         #Recovering(Mezzanine)
+        RH = x[4]         #Recovering(Severe Casees)
+        R = x[5]          #Revovered(Full)
+        D = x[6]          #Dead
 
         dS = -beta * I * S
         dE = beta * I * S - a * E
         dI = a * E - gamma * I
-        dMild = p_mild * gamma * I - (1 / D_recovery_mild) * Mild
-        dSevere = p_severe * gamma * I - (1 / D_hospital_lag) * Severe
-        dSevere_H = (1 / D_hospital_lag) * Severe - (1 / D_recovery_severe) * Severe_H
-        dFatal = p_fatal * gamma * I - (1 / D_death) * Fatal
-        dR_Mild = (1 / D_recovery_mild) * Mild
-        dR_Severe = (1 / D_recovery_severe) * Severe_H
-        dR_Fatal = (1 / D_death) * Fatal
+        dRM = gamma*I - (1/D_to_hospital)*RM
+        dRH = P_SEVERE*(1/D_to_hospital)*RM - (1/D_recovery)*RH
+        dR  = 0.8*(1/D_to_hospital)*RM + (1-CFR/P_SEVERE)*(1/D_recovery)*RH
+        dD  = (CFR/P_SEVERE)*(1/D_recovery)*RH
 
-            #   0   1   2    3        4         5        6        7         8         9
-        return [dS, dE, dI, dMild, dSevere, dSevere_H, dFatal, dR_Mild, dR_Severe, dR_Fatal]
 
+             #   0   1   2   3    4    5   6
+        return [dS, dE, dI, dRM, dRH, dR, dD]
 
     def integrate(m,f,y,t,h):
         # f is a func of time t and state y;
@@ -94,7 +84,7 @@ def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_ho
         return r
 
 
-    v =  [1 - I0/N, 0, I0/N, 0, 0, 0, 0, 0, 0, 0]
+    v = [1, 0, 1/N, 0, 0, 0, 0]
     t = 0
 
     P = []
@@ -102,9 +92,8 @@ def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_ho
     Iters = []
     while(steps != 0):
         if ((steps + 1) % (sample_step) == 0):
-            #          Dead        Hospital      Recovered     Infectious   Exposed
-            P.append([ N*v[9], N*(v[5]+v[6]),  N*(v[7] + v[8]),  N*v[2],    N*v[1]])
-            Iters.append(v)
+            #          Dead   Hospital    0       exposed
+            P.append([N*v[6], N*(v[4]), N*(v[2]), N*v[1]])
             TI.append(N*(1-v[0]))
         v = integrate(method,seir,v,t,dt)
         t += dt
@@ -113,8 +102,7 @@ def get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_ho
     return {"P": P,
             "deaths": N*v[6],
             "total": 1-v[0],
-            "total_infected": TI,
-            "Iters":Iters}
+            "total_infected": TI}
 
 
 if __name__ == '__main__':
@@ -138,8 +126,10 @@ if __name__ == '__main__':
     dt = 2
     P_SEVERE = 0.2
     duration = 7*12*1e10
+    D_to_hospital = 3
+    D_recovery = 30
 
-    result = get_solution(dt, N, I0, R0, D_incbation, D_infectious, D_recovery_mild, D_hospital_lag, D_recovery_severe, D_death, P_SEVERE, CFR, InterventionTime, InterventionAmt, duration)
+    result = get_solution(dt, N, R0, D_incbation, D_infectious, D_to_hospital, D_recovery, P_SEVERE, CFR, InterventionTime, InterventionAmt)
     print(result)
 
 
